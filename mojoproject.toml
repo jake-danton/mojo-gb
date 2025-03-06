@@ -1,0 +1,12 @@
+[project]
+channels = ["https://conda.modular.com/max-nightly", "https://conda.modular.com/max", "https://repo.prefix.dev/modular-community", "conda-forge"]
+name = "mojo-gb"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+max = ">=25.2.0.dev2025030505,<26"
+python = ">=3.12.9,<3.13"
+pygame = ">=2.6.1,<3"
