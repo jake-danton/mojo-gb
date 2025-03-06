@@ -31,10 +31,10 @@ You will need to provide your own ROMs.
 magic run mojo run ./main.mojo <Boot ROM file> <Game ROM File> [<Pixel Scale Factor>]
 ```
 
-So, for example, to run a `game.gb` ROM file at a 4x scale, execute:
+So, for example, to run a `Tetris (World).gb` ROM file at a 4x scale, execute:
 
 ```
-magic run mojo run ./main.mojo ./roms/dmg_boot.bin ./roms/game.gb 4
+magic run mojo run ./main.mojo ./roms/dmg_boot.bin ./roms/Tetris\ \(World\).gb  4
 ```
 
 ## Prerequisites
