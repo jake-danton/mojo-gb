@@ -464,6 +464,7 @@ struct CPU[ROM_SIZE: Int]:
 
     @always_inline
     fn get[register: ByteTarget](self) raises -> Byte:
+        @parameter
         if register == ByteTarget.A:
             return self.registers.a
         elif register == ByteTarget.B:
@@ -487,6 +488,7 @@ struct CPU[ROM_SIZE: Int]:
 
     @always_inline
     fn set[register: ByteTarget](mut self, value: Byte) raises:
+        @parameter
         if register == ByteTarget.A:
             self.registers.a = value
         elif register == ByteTarget.B:
@@ -509,6 +511,7 @@ struct CPU[ROM_SIZE: Int]:
             raise Error(String("Invalid register", String(register)))
 
     fn run_operation[method: ByteMethod](mut self, value: Byte) raises -> Byte:
+        @parameter
         if method == ByteMethod.Inc:
             return self.inc_byte(value)
         elif method == ByteMethod.Dec:
@@ -562,6 +565,7 @@ struct CPU[ROM_SIZE: Int]:
         raise Error(String("Invalid method ", String(method))) 
 
     fn run_operation[method: BitMethod, bit: BitPosition](mut self, value: Byte) raises -> Byte:
+        @parameter
         if method == BitMethod.BitTest:
             self.bit_test(value, bit)
             return 0 # TODO how to handle this?
@@ -593,9 +597,11 @@ struct CPU[ROM_SIZE: Int]:
     fn arithmetic_instruction[register: ByteTarget, method: ByteMethod, save: Bool = False](mut self) raises -> Tuple[UInt16, Byte]:
         var result = self.manipulate_8bit_register[register, method]()
 
+        @parameter
         if save:
             self.registers.a = result
 
+        @parameter
         if register == ByteTarget.D8:
             return Tuple[UInt16, Byte](wrapping_add(self.pc, 2), 8)
         elif register == ByteTarget.HLI:
@@ -606,12 +612,14 @@ struct CPU[ROM_SIZE: Int]:
     fn prefix_instruction[register: ByteTarget, method: ByteMethod, save: Bool = False](mut self) raises -> Tuple[UInt16, Byte]:
         var result = self.manipulate_8bit_register[register, method]()
 
+        @parameter
         if save:
             self.set[register](result)
 
         return Tuple[UInt16, Byte](wrapping_add(self.pc, 2), 16 if register == ByteTarget.HLI else 8)
 
     fn prefix_instruction[register: ByteTarget, method: BitMethod, bit: BitPosition, save: Bool = False](mut self) raises -> Tuple[UInt16, Byte]:
+        @parameter
         if save:
             self.manipulate_8bit_register[register, method, bit, register]()
         else:
@@ -624,6 +632,7 @@ struct CPU[ROM_SIZE: Int]:
 
     @always_inline
     fn get[register: WordTarget](self) raises -> UInt16:
+        @parameter
         if register == WordTarget.AF:
             return self.registers.get_af()
         elif register == WordTarget.BC:
@@ -639,6 +648,7 @@ struct CPU[ROM_SIZE: Int]:
 
     @always_inline
     fn set[register: WordTarget](mut self, value: UInt16) raises:
+        @parameter
         if register == WordTarget.AF:
             self.registers.set_af(value)
         elif register == WordTarget.BC:
@@ -653,6 +663,7 @@ struct CPU[ROM_SIZE: Int]:
             raise Error(String("Invalid register", String(register)))
 
     fn run_operation[method: WordMethod](mut self, value: UInt16) raises -> UInt16:
+        @parameter
         if method == WordMethod.Inc:
             return self.inc_word(value)
         elif method == WordMethod.Dec:
@@ -664,15 +675,6 @@ struct CPU[ROM_SIZE: Int]:
         var value = self.get[source_register]()
         var result = self.run_operation[method](value)
         self.set[target_register](result)
-
-
-
-
-
-    fn foo(mut self) raises -> Byte:
-        return self.manipulate_8bit_register[ByteTarget.A, ByteMethod.Inc]()
-
-
 
     fn RLC[target: ByteTarget](mut self) raises -> Tuple[UInt16, Byte]:
         # DESCRIPTION: (rotate left) - bit rotate a specific register left by 1 (not through the carry flag)
